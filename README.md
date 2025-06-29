@@ -2,6 +2,8 @@
 
 A simple news application that fetches and displays the latest news articles using React and the News API.
 
+![alt text](<Screenshot 2025-06-29 at 6.36.53 PM.png>)
+
 ## Features
 
 - Browse top headlines by category (Technology, Business, Health, Sports, Entertainment)
