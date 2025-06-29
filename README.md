@@ -23,7 +23,6 @@ A simple news application that fetches and displays the latest news articles usi
 1. Clone the repository:
     ```bash
     git clone https://github.com/your-username/news-app.git
-    cd news-app
     ```
 2. Install dependencies:
     ```bash
@@ -35,7 +34,7 @@ A simple news application that fetches and displays the latest news articles usi
     ```
 4. Start the development server:
     ```bash
-    npm start
+    npm run dev
     ```
 
 ## Technologies Used
