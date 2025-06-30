@@ -26,7 +26,7 @@ const NewsItem = ({title, description, src, url}) => {
         <h5 className="card-title" style={{fontSize: "1.1rem"}}>{title.slice(0, 60)}...</h5>
         <p className="card-text" style={{fontSize: "0.95rem"}}>
           {description
-            ? description.slice(0, 90)
+            ? description.slice(0, 90) + "..."
             : "Stay updated with the latest developments, key insights, and top stories from around the world."}
         </p>
         <a href={url} className="btn btn-primary mt-auto" target="_blank" rel="noopener noreferrer">

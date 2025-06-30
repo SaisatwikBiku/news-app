@@ -5,6 +5,7 @@ const NewsBoard = ({category}) => {
     const [articles, setArticles] = useState([]);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
+    const [searchInput, setSearchInput] = useState('');
 
     useEffect(()=> {
         let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${import.meta.env.VITE_API_KEY}`;
@@ -28,19 +29,25 @@ const NewsBoard = ({category}) => {
           });
     }, [category, search]);
 
+    const handleSearch = (e) => {
+      e.preventDefault();
+      setSearch(searchInput);
+    };
+
     return (
       <div>
         <div style={{ height: '24px' }} />
         <h2 className="text-center">Latest <span className="badge bg-danger">News</span></h2>
-        <div className="d-flex justify-content-center mb-3">
+        <form className="d-flex justify-content-center mb-3" onSubmit={handleSearch}>
           <input
             type="text"
             className="form-control w-50"
             placeholder="Search news..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
+            value={searchInput}
+            onChange={e => setSearchInput(e.target.value)}
           />
-        </div>
+          <button className="btn btn-primary ms-2" type="submit">Search</button>
+        </form>
         {error && <p className="text-center text-danger">{error}</p>}
         <div className="row justify-content-center">
           {articles && articles.map((news, index) => (
