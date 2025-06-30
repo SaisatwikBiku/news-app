@@ -31,14 +31,14 @@ const NewsBoard = ({category}) => {
       {error && <p className="text-center text-danger">{error}</p>}
       <div className="row justify-content-center">
         {articles && articles.map((news, index) => (
-        <div className="col-12 col-sm-6 col-md-4 d-flex justify-content-center" key={index}>
-          <NewsItem
-          title={news.title}
-          description={news.description}
-          src={news.image}
-          url={news.url}
-          />
-        </div>
+          <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center" key={index}>
+            <NewsItem
+              title={news.title}
+              description={news.description}
+              src={news.image}
+              url={news.url}
+            />
+          </div>
         ))}
       </div>
       </div>
