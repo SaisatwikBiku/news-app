@@ -26,11 +26,21 @@ const NewsBoard = ({category}) => {
 
     return (
       <div>
-        <h2 className="text-center">Latest <span className="badge bg-danger">News</span></h2>
-        {error && <p className="text-center text-danger">{error}</p>}
+      <div style={{ height: '24px' }} />
+      <h2 className="text-center">Latest <span className="badge bg-danger">News</span></h2>
+      {error && <p className="text-center text-danger">{error}</p>}
+      <div className="row justify-content-center">
         {articles && articles.map((news, index) => (
-          <NewsItem key={index} title={news.title} description={news.description} src={news.image} url={news.url} />
+        <div className="col-12 col-sm-6 col-md-4 d-flex justify-content-center" key={index}>
+          <NewsItem
+          title={news.title}
+          description={news.description}
+          src={news.image}
+          url={news.url}
+          />
+        </div>
         ))}
+      </div>
       </div>
     );
 };
