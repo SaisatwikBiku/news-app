@@ -1,6 +1,6 @@
 import image from '../assets/news.jpg';
 
-const NewsItem = ({title, description, src, url}) => {
+const NewsItem = ({title, description, src, url, onSave}) => {
   return (
     <div
       className="card bg-dark text-light mb-3 mx-3 my-3"
@@ -29,9 +29,16 @@ const NewsItem = ({title, description, src, url}) => {
             ? description.slice(0, 90) + "..."
             : "Stay updated with the latest developments, key insights, and top stories from around the world."}
         </p>
-        <a href={url} className="btn btn-primary mt-auto" target="_blank" rel="noopener noreferrer">
-          Read more
-        </a>
+        <div className="d-flex justify-content-between align-items-center mt-auto">
+          <a href={url} className="btn btn-primary" target="_blank" rel="noopener noreferrer">
+            Read more
+          </a>
+          {onSave && (
+            <button className="btn btn-outline-warning ms-2" onClick={onSave}>
+              Save
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
