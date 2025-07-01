@@ -1,6 +1,6 @@
 import image from '../assets/news.jpg';
 
-const NewsItem = ({title, description, src, url, onSave}) => {
+const NewsItem = ({title, description, src, url, onSave, isSaved}) => {
   return (
     <div
       className="card bg-dark text-light mb-3 mx-3 my-3"
@@ -34,8 +34,12 @@ const NewsItem = ({title, description, src, url, onSave}) => {
             Read more
           </a>
           {onSave && (
-            <button className="btn btn-outline-warning ms-2" onClick={onSave}>
-              Save
+            <button
+              className={`btn ms-2 ${isSaved ? 'btn-success' : 'btn-outline-warning'}`}
+              onClick={onSave}
+              disabled={isSaved}
+            >
+              {isSaved ? 'Saved!' : 'Save'}
             </button>
           )}
         </div>
@@ -44,4 +48,4 @@ const NewsItem = ({title, description, src, url, onSave}) => {
   );
 };
 
-export default NewsItem
+export default NewsItem;

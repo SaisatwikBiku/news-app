@@ -20,7 +20,14 @@ const NewsBoard = ({ category: initialCategory }) => {
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [category, setCategory] = useState(initialCategory || 'general');
+  const [savedUrls, setSavedUrls] = useState([]);
   const navigate = useNavigate();
+
+  // Load saved URLs from localStorage
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('savedNews') || '[]');
+    setSavedUrls(saved.map(article => article.url));
+  }, []);
 
   useEffect(() => {
     let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${import.meta.env.VITE_API_KEY}`;
@@ -51,14 +58,23 @@ const NewsBoard = ({ category: initialCategory }) => {
 
   // Save handler
   const handleSave = (article) => {
-    // Get current saved articles
     const saved = JSON.parse(localStorage.getItem('savedNews') || '[]');
-    // Avoid duplicates (by url)
     if (!saved.some(item => item.url === article.url)) {
       saved.push(article);
       localStorage.setItem('savedNews', JSON.stringify(saved));
+      setSavedUrls(saved.map(item => item.url)); // update state
     }
   };
+
+  // Listen for removal from SavedNews (when user returns from /saved)
+  useEffect(() => {
+    const onFocus = () => {
+      const saved = JSON.parse(localStorage.getItem('savedNews') || '[]');
+      setSavedUrls(saved.map(article => article.url));
+    };
+    window.addEventListener('focus', onFocus);
+    return () => window.removeEventListener('focus', onFocus);
+  }, []);
 
   const handleCategoryChange = (e) => {
     setCategory(e.target.value);
@@ -101,14 +117,21 @@ const NewsBoard = ({ category: initialCategory }) => {
               src={news.image}
               url={news.url}
               onSave={() => handleSave(news)}
+              isSaved={savedUrls.includes(news.url)}
             />
           </div>
         ))}
       </div>
-      <div className="text-center mt-4">
+      <div className="text-center mt-4" >
         <button className="btn btn-success" onClick={() => navigate('/saved')}>
           View Saved News
         </button>
+      </div><br />
+      <div className="text-center">
+        <small className="text-muted">Powered by GNews API</small>
+      </div>
+      <div className="text-center mt-2">
+        <small className="text-muted">Developed by <a href="https://github.com/SaisatwikBiku" target="_blank">Sai Satwik Bikumandla</a></small>
       </div>
     </div>
   );
