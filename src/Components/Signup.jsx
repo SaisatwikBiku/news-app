@@ -44,7 +44,8 @@ export default function Signup() {
                 <br />
                 <input type="password" className="form-control" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
                 <br />
-                <button className="btn btn-dark" type="submit">Sign Up</button>
+                <button className="btn btn-primary" type="submit">Sign Up</button>
+                <p>Already have an account? <a href="/login">Login</a></p>
                 <p>{message}</p>
     </form>
             </div>

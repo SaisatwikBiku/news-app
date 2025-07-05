@@ -43,7 +43,8 @@ export default function Login() {
                 <br />
                 <input type="password" className="form-control" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
       <br />
-      <button className="btn btn-dark" type="submit">Login</button>
+      <button className="btn btn-primary" type="submit">Login</button>
+      <p>Don't have an account? <a href="/signup">Sign up</a></p>
       <p>{message}</p>
     </form>
             </div>
