@@ -21,6 +21,7 @@ const NewsBoard = ({ category: initialCategory }) => {
   const [searchInput, setSearchInput] = useState('');
   const [category, setCategory] = useState(initialCategory || 'general');
   const [savedUrls, setSavedUrls] = useState([]);
+
   const navigate = useNavigate();
 
   // Load saved URLs from localStorage
@@ -28,6 +29,29 @@ const NewsBoard = ({ category: initialCategory }) => {
     const saved = JSON.parse(localStorage.getItem('savedNews') || '[]');
     setSavedUrls(saved.map(article => article.url));
   }, []);
+
+  useEffect(() => {
+  const fetchSaved = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/saved", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setSavedUrls(data.map(item => item.url));
+    } catch (err) {
+      console.error("Failed to fetch saved news", err);
+    }
+  };
+
+  fetchSaved();
+}, []);
+
 
   useEffect(() => {
     let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${import.meta.env.VITE_API_KEY}`;
@@ -57,14 +81,42 @@ const NewsBoard = ({ category: initialCategory }) => {
   };
 
   // Save handler
-  const handleSave = (article) => {
-    const saved = JSON.parse(localStorage.getItem('savedNews') || '[]');
-    if (!saved.some(item => item.url === article.url)) {
-      saved.push(article);
-      localStorage.setItem('savedNews', JSON.stringify(saved));
-      setSavedUrls(saved.map(item => item.url)); // update state
+  const handleSave = async (article) => {
+  const token = localStorage.getItem("token");
+  if (!token) return alert("Please login to save news");
+
+  try {
+    const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: article.title,
+        description: article.description,
+        url: article.url,
+        urlToImage: article.image,
+        publishedAt: article.publishedAt,
+        source: article.source,
+        category: category,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setSavedUrls((prev) => [...prev, article.url]);
+    } else {
+      alert(data.error || "Save failed");
     }
-  };
+  } catch (err) {
+    console.error("Error saving:", err);
+    alert("Something went wrong. Please try again.");
+  }
+};
+
+
 
   // Listen for removal from SavedNews (when user returns from /saved)
   useEffect(() => {
@@ -81,6 +133,8 @@ const NewsBoard = ({ category: initialCategory }) => {
     setSearch('');
     setSearchInput('');
   };
+
+
 
   return (
     <div>
@@ -117,11 +171,12 @@ const NewsBoard = ({ category: initialCategory }) => {
               src={news.image}
               url={news.url}
               onSave={() => handleSave(news)}
-              isSaved={savedUrls.includes(news.url)}
+              isSaved={savedUrls.includes(news.url)}  
             />
           </div>
         ))}
-      </div>
+        </div>
+
       <div className="text-center mt-4" >
         <button className="btn btn-success" onClick={() => navigate('/saved')}>
           View Saved News

@@ -6,15 +6,60 @@ const SavedNews = () => {
   const [saved, setSaved] = useState([]);
 
   useEffect(() => {
-    const savedArticles = JSON.parse(localStorage.getItem('savedNews') || '[]');
-    setSaved(savedArticles);
-  }, []);
+  const fetchSaved = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-  const handleRemove = (url) => {
-    const updated = saved.filter(article => article.url !== url);
-    setSaved(updated);
-    localStorage.setItem('savedNews', JSON.stringify(updated));
+    try {
+      const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/saved", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      // Map urlToImage to image to work with existing component
+      const normalized = data.map(item => ({
+        ...item,
+        image: item.urlToImage,
+      }));
+      setSaved(normalized);
+    } catch (err) {
+      console.error("Failed to fetch saved news", err);
+    }
   };
+
+  fetchSaved();
+}, []);
+
+
+
+  const handleRemove = async (url) => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/remove", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ url }),
+    });
+
+    if (res.ok) {
+      const updated = saved.filter(article => article.url !== url);
+      setSaved(updated);
+    } else {
+      const err = await res.json();
+      alert(err.error || "Remove failed");
+    }
+  } catch (err) {
+    console.error("Remove failed:", err);
+  }
+};
+
 
   // Custom NewsItem for SavedNews with Remove button beside Read More
   const SavedNewsItem = ({ news }) => (
