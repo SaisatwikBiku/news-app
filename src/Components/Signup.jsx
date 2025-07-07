@@ -7,8 +7,28 @@ export default function Signup() {
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
+
+  const validateForm = () => {
+    if (
+      !/^[a-zA-Z][a-zA-Z0-9]{1,}[a-zA-Z]$/.test(username) ||
+      username.length < 3
+    ) {
+      window.alert(
+        "Username must be at least 3 characters, start and end with a letter, and contain only letters and numbers."
+      );
+      return false;
+    }
+    if (password.length < 6) {
+      window.alert("Password must be at least 6 characters.");
+      return false;
+    }
+    return true;
+  };
+
   const handleSignup = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     try {
       const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/auth/register", {
@@ -16,7 +36,7 @@ export default function Signup() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
-       const data = await res.json();
+      const data = await res.json();
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
@@ -31,8 +51,6 @@ export default function Signup() {
   };
 
   return (
-    
-
     <div className="container">
         <div className="row d-flex">
             <div className="col-md-3"></div>
@@ -46,12 +64,10 @@ export default function Signup() {
                 <br />
                 <button className="btn btn-primary" type="submit">Sign Up</button>
                 <p>Already have an account? <a href="/login">Login</a></p>
-                <p>{message}</p>
-    </form>
+                <p style={{color: "red"}}>{message}</p>
+              </form>
             </div>
         </div>
     </div>
-
-
   );
 }
