@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import NewsBoard from "./Components/NewsBoard";
 import SavedNews from "./Components/SavedNews";
 import Login from "./Components/Login";     
@@ -7,49 +7,103 @@ import Signup from "./Components/Signup";
 import ProtectedRoute from "./Components/ProtectedRoute";   
 import Logout from "./Components/Logout";
 
+function Navbar({ isLoggedIn }) {
+  const location = useLocation();
+
+  return (
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+      <div className="container-fluid">
+        <Link className="navbar-brand d-flex align-items-center" to="/">
+          <span className="badge bg-light text-dark fs-4 px-3 py-2 shadow-sm">NewsApp</span>
+        </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navbarNav">
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link
+                className={`nav-link${location.pathname === "/" ? " active fw-bold text-primary" : ""}`}
+                to="/"
+              >
+                Home
+              </Link>
+            </li>
+            {isLoggedIn && (
+              <li className="nav-item">
+                <Link
+                  className={`nav-link${location.pathname === "/saved" ? " active fw-bold text-primary" : ""}`}
+                  to="/saved"
+                >
+                  Saved News
+                </Link>
+              </li>
+            )}
+            {!isLoggedIn && (
+              <>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link${location.pathname === "/login" ? " active fw-bold text-primary" : ""}`}
+                    to="/login"
+                  >
+                    Login
+                  </Link>
+                </li>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link${location.pathname === "/signup" ? " active fw-bold text-primary" : ""}`}
+                    to="/signup"
+                  >
+                    Signup
+                  </Link>
+                </li>
+              </>
+            )}
+            {isLoggedIn && (
+              <li className="nav-item">
+                <Link
+                  className={`nav-link${location.pathname === "/logout" ? " active fw-bold text-primary" : ""}`}
+                  to="/logout"
+                >
+                  Logout
+                </Link>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 function App() {
   const isLoggedIn = !!localStorage.getItem("token");
   return (
     <Router>
-       <nav className="navbar navbar-expand navbar-dark bg-dark px-3">
-        <Link className="navbar-brand" to="/">NewsApp</Link>
-        <div className="navbar-nav">
-          <Link className="nav-link" to="/">Home</Link>
-
-          {isLoggedIn && (
-            <Link className="nav-link" to="/saved">
-              Saved News
-            </Link>
-          )}
-
-          {!isLoggedIn && (
-            <>
-              <Link className="nav-link" to="/login">Login</Link>
-              <Link className="nav-link" to="/signup">Signup</Link>
-            </>
-          )}
-
-          {isLoggedIn && (
-            <Link className="nav-link" to="/logout">Logout</Link>
-          )}
-        </div>
-      </nav>
-
+      <Navbar isLoggedIn={isLoggedIn} />
       <Routes>
-          <Route path="/" element={
-            <ProtectedRoute>
-              <NewsBoard category="general" />
-            </ProtectedRoute>
-          } />
-          <Route path="/saved" element={
-            <ProtectedRoute>
-              <SavedNews />
-            </ProtectedRoute>
-          } />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/logout" element={<Logout />} />
-        </Routes>
+        <Route path="/" element={
+          <ProtectedRoute>
+            <NewsBoard category="general" />
+          </ProtectedRoute>
+        } />
+        <Route path="/saved" element={
+          <ProtectedRoute>
+            <SavedNews />
+          </ProtectedRoute>
+        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/logout" element={<Logout />} />
+      </Routes>
     </Router>
   );
 }
