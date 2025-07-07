@@ -10,11 +10,11 @@ export default function Signup() {
 
   const validateForm = () => {
     if (
-      !/^[a-zA-Z][a-zA-Z0-9]{1,}[a-zA-Z]$/.test(username) ||
+      !/^[a-zA-Z][a-zA-Z0-9]{1,}$/.test(username) ||
       username.length < 3
     ) {
       window.alert(
-        "Username must be at least 3 characters, start and end with a letter, and contain only letters and numbers."
+        "Username must be at least 3 characters, start with a letter, and contain only letters and numbers."
       );
       return false;
     }
