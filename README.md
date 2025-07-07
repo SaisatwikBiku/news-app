@@ -90,17 +90,10 @@ A full-stack news application built with **React**, **Express**, and **MongoDB**
 
 ---
 
-## Live Demo
-
-Frontend: [https://news-application-self.vercel.app](https://news-application-self.vercel.app)  
-Backend: [https://news-app-backend-xyz.onrender.com](https://news-app-backend-xyz.onrender.com)
-
-> Replace with your actual deployed URLs.
-
----
-
 ## Coming Soon / TODO
 
+- UI Improvements
+- Mobile Optimisations
 - Toast notifications for Save/Remove
 - Dark mode toggle
 - Analytics dashboard
