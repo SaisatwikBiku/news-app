@@ -31,27 +31,26 @@ const NewsBoard = ({ category: initialCategory }) => {
   }, []);
 
   useEffect(() => {
-  const fetchSaved = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+    const fetchSaved = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-    try {
-      const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/saved", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/saved", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      const data = await res.json();
-      setSavedUrls(data.map(item => item.url));
-    } catch (err) {
-      console.error("Failed to fetch saved news", err);
-    }
-  };
+        const data = await res.json();
+        setSavedUrls(data.map(item => item.url));
+      } catch (err) {
+        console.error("Failed to fetch saved news", err);
+      }
+    };
 
-  fetchSaved();
-}, []);
-
+    fetchSaved();
+  }, []);
 
   useEffect(() => {
     let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${import.meta.env.VITE_API_KEY}`;
@@ -82,41 +81,39 @@ const NewsBoard = ({ category: initialCategory }) => {
 
   // Save handler
   const handleSave = async (article) => {
-  const token = localStorage.getItem("token");
-  if (!token) return alert("Please login to save news");
+    const token = localStorage.getItem("token");
+    if (!token) return alert("Please login to save news");
 
-  try {
-    const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        title: article.title,
-        description: article.description,
-        url: article.url,
-        urlToImage: article.image,
-        publishedAt: article.publishedAt,
-        source: article.source,
-        category: category,
-      }),
-    });
+    try {
+      const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/news/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: article.title,
+          description: article.description,
+          url: article.url,
+          urlToImage: article.image,
+          publishedAt: article.publishedAt,
+          source: article.source,
+          category: category,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (res.ok) {
-      setSavedUrls((prev) => [...prev, article.url]);
-    } else {
-      alert(data.error || "Save failed");
+      if (res.ok) {
+        setSavedUrls((prev) => [...prev, article.url]);
+      } else {
+        alert(data.error || "Save failed");
+      }
+    } catch (err) {
+      console.error("Error saving:", err);
+      alert("Something went wrong. Please try again.");
     }
-  } catch (err) {
-    console.error("Error saving:", err);
-    alert("Something went wrong. Please try again.");
-  }
-};
-
-
+  };
 
   // Listen for removal from SavedNews (when user returns from /saved)
   useEffect(() => {
@@ -134,59 +131,74 @@ const NewsBoard = ({ category: initialCategory }) => {
     setSearchInput('');
   };
 
-
-
   return (
-    <div>
-      <div style={{ height: '24px' }} />
-      <h2 className="text-center">Latest <span className="badge bg-danger">News</span></h2>
-      <div className="d-flex justify-content-center mb-3">
-        <select
-          className="form-select w-auto me-2"
-          value={category}
-          onChange={handleCategoryChange}
-        >
-          {categories.map(cat => (
-            <option key={cat.value} value={cat.value}>{cat.label}</option>
-          ))}
-        </select>
-        <form className="d-flex" onSubmit={handleSearch}>
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search news..."
-            value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-          />
-          <button className="btn btn-primary ms-2" type="submit">Search</button>
-        </form>
-      </div>
-      {error && <p className="text-center text-danger">{error}</p>}
-      <div className="row justify-content-center">
-        {articles && articles.map((news, index) => (
-          <div className="col-12 col-sm-6 col-md-4 custom-col-lg-5 d-flex justify-content-center" key={index}>
-            <NewsItem
-              title={news.title}
-              description={news.description}
-              src={news.image}
-              url={news.url}
-              onSave={() => handleSave(news)}
-              isSaved={savedUrls.includes(news.url)}  
+    <div className="container py-4">
+      <div className="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 gap-3">
+        <h2 className="mb-0 text-center text-md-start">
+          Latest <span className="badge bg-danger">News</span>
+        </h2>
+        <div className="d-flex flex-column flex-md-row align-items-center gap-2">
+          <select
+            className="form-select w-auto"
+            value={category}
+            onChange={handleCategoryChange}
+            style={{ minWidth: 140 }}
+          >
+            {categories.map(cat => (
+              <option key={cat.value} value={cat.value}>{cat.label}</option>
+            ))}
+          </select>
+          <form className="d-flex" onSubmit={handleSearch}>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search news..."
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+              style={{ minWidth: 180 }}
             />
-          </div>
-        ))}
+            <button className="btn btn-primary ms-2" type="submit">
+              <i className="bi bi-search"></i> Search
+            </button>
+          </form>
         </div>
-
-      <div className="text-center mt-4" >
-        <button className="btn btn-success" onClick={() => navigate('/saved')}>
-          View Saved News
+      </div>
+      {error && <div className="alert alert-danger text-center">{error}</div>}
+      <div className="row g-4 justify-content-center">
+        {articles && articles.length > 0 ? (
+          articles.map((news, index) => (
+            <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" key={index}>
+              <NewsItem
+                title={news.title}
+                description={news.description}
+                src={news.image}
+                url={news.url}
+                onSave={() => handleSave(news)}
+                isSaved={savedUrls.includes(news.url)}
+              />
+            </div>
+          ))
+        ) : (
+          !error && (
+            <div className="col-12 text-center text-muted py-5">
+              <i className="bi bi-newspaper" style={{ fontSize: "2.5rem" }}></i>
+              <div>No news found for this category or search.</div>
+            </div>
+          )
+        )}
+      </div>
+      <div className="text-center mt-4">
+        <button className="btn btn-success px-4 py-2" onClick={() => navigate('/saved')}>
+          <i className="bi bi-bookmark-heart-fill me-2"></i>View Saved News
         </button>
-      </div><br />
-      <div className="text-center">
-        <small className="text-muted">Powered by GNews API</small>
+      </div>
+      <div className="text-center mt-4">
+        <small className="text-muted">Powered by <a href="https://gnews.io/" target="_blank" rel="noopener noreferrer">GNews API</a></small>
       </div>
       <div className="text-center mt-2">
-        <small className="text-muted">Developed by <a href="https://github.com/SaisatwikBiku" target="_blank">Sai Satwik Bikumandla</a></small>
+        <small className="text-muted">
+          Developed by <a href="https://github.com/SaisatwikBiku" target="_blank" rel="noopener noreferrer">Sai Satwik Bikumandla</a>
+        </small>
       </div>
     </div>
   );
