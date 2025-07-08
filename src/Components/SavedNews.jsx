@@ -2,6 +2,84 @@ import React, { useEffect, useState } from 'react';
 import defaultNewsImage from '../assets/news.jpg';
 import { useNavigate } from 'react-router-dom';
 
+
+const SavedNewsItem = ({ news, onRemove }) => (
+  <div className="card shadow-sm border-0 bg-grey mb-4"
+    style={{
+      width: "100%",
+      maxWidth: 340,
+      minHeight: 420,
+      borderRadius: "16px",
+      overflow: "hidden",
+      position: "relative",
+      transition: "box-shadow 0.2s",
+      display: "flex",
+      flexDirection: "column"
+    }}
+  >
+    <div style={{ height: 180, overflow: "hidden" }}>
+      <img
+        src={news.image ? news.image : defaultNewsImage}
+        className="card-img-top"
+        alt="news"
+        style={{
+          height: "180px",
+          width: "100%",
+          objectFit: "cover",
+          borderTopLeftRadius: "16px",
+          borderTopRightRadius: "16px",
+        }}
+      />
+    </div>
+    <div className="card-body d-flex flex-column justify-content-between" style={{ minHeight: 200 }}>
+      <h5 className="card-title mb-2" style={{ fontSize: "1.08rem", fontWeight: 600 }}>
+        {news.title?.length > 70 ? news.title.slice(0, 67) + "..." : news.title}
+      </h5>
+      <p className="card-text text-muted mb-3" style={{ fontSize: "0.97rem" }}>
+        {news.description
+          ? news.description.length > 100
+            ? news.description.slice(0, 97) + "..."
+            : news.description
+          : "Stay updated with the latest developments, key insights, and top stories from around the world."}
+      </p>
+      <div className="d-flex justify-content-between align-items-center mt-auto gap-2">
+        <a
+          href={news.url}
+          className="btn btn-sm btn-primary px-3"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: 500 }}
+        >
+          <i className="bi bi-box-arrow-up-right me-1"></i>Read More
+        </a>
+        <button
+          className="btn btn-sm btn-outline-danger px-3"
+          onClick={() => onRemove(news.url)}
+          title="Remove from saved"
+          style={{ fontWeight: 500 }}
+        >
+          <i className="bi bi-trash me-1"></i>Remove
+        </button>
+      </div>
+      {news.category && (
+        <span
+          className="badge bg-secondary"
+          style={{
+            position: 'absolute',
+            top: 16,
+            left: 16,
+            zIndex: 2,
+            fontSize: '0.85rem',
+            letterSpacing: '0.5px'
+          }}
+        >
+          {news.category.charAt(0).toUpperCase() + news.category.slice(1)}
+        </span>
+      )}
+    </div>
+  </div>
+);
+
 const SavedNews = () => {
   const [saved, setSaved] = useState([]);
   const [error, setError] = useState(null);
@@ -20,7 +98,6 @@ const SavedNews = () => {
         });
 
         const data = await res.json();
-        // Map urlToImage to image to work with existing component
         const normalized = data.map(item => ({
           ...item,
           image: item.urlToImage,
@@ -61,84 +138,6 @@ const SavedNews = () => {
     }
   };
 
-  // Card UI consistent with NewsBoard (homepage)
-  const SavedNewsItem = ({ news }) => (
-    <div className="card shadow-sm border-0 bg-white mb-4"
-      style={{
-        width: "100%",
-        maxWidth: 340,
-        minHeight: 420,
-        borderRadius: "16px",
-        overflow: "hidden",
-        position: "relative",
-        transition: "box-shadow 0.2s",
-        display: "flex",
-        flexDirection: "column"
-      }}
-    >
-      <div style={{ height: 180, overflow: "hidden" }}>
-        <img
-          src={news.image ? news.image : defaultNewsImage}
-          className="card-img-top"
-          alt="news"
-          style={{
-            height: "180px",
-            width: "100%",
-            objectFit: "cover",
-            borderTopLeftRadius: "16px",
-            borderTopRightRadius: "16px",
-          }}
-        />
-      </div>
-      <div className="card-body d-flex flex-column justify-content-between" style={{ minHeight: 200 }}>
-        <h5 className="card-title mb-2" style={{ fontSize: "1.08rem", fontWeight: 600 }}>
-          {news.title?.length > 70 ? news.title.slice(0, 67) + "..." : news.title}
-        </h5>
-        <p className="card-text text-muted mb-3" style={{ fontSize: "0.97rem" }}>
-          {news.description
-            ? news.description.length > 100
-              ? news.description.slice(0, 97) + "..."
-              : news.description
-            : "Stay updated with the latest developments, key insights, and top stories from around the world."}
-        </p>
-        <div className="d-flex justify-content-between align-items-center mt-auto gap-2">
-          <a
-            href={news.url}
-            className="btn btn-sm btn-primary px-3"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ fontWeight: 500 }}
-          >
-            <i className="bi bi-box-arrow-up-right me-1"></i>Read More
-          </a>
-          <button
-            className="btn btn-sm btn-outline-danger px-3"
-            onClick={() => handleRemove(news.url)}
-            title="Remove from saved"
-            style={{ fontWeight: 500 }}
-          >
-            <i className="bi bi-trash me-1"></i>Remove
-          </button>
-        </div>
-        {news.category && (
-          <span
-            className="badge bg-secondary"
-            style={{
-              position: 'absolute',
-              top: 16,
-              left: 16,
-              zIndex: 2,
-              fontSize: '0.85rem',
-              letterSpacing: '0.5px'
-            }}
-          >
-            {news.category.charAt(0).toUpperCase() + news.category.slice(1)}
-          </span>
-        )}
-      </div>
-    </div>
-  );
-
   return (
     <div className="container py-4">
       <div className="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 gap-3">
@@ -162,7 +161,7 @@ const SavedNews = () => {
         <div className="row g-4 justify-content-center">
           {saved.map((news, index) => (
             <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" key={index}>
-              <SavedNewsItem news={news} />
+              <SavedNewsItem news={news} onRemove={handleRemove} />
             </div>
           ))}
         </div>
