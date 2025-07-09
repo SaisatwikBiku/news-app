@@ -134,31 +134,42 @@ const NewsBoard = ({ category: initialCategory }) => {
   return (
     <div className="container py-4">
       <div className="d-flex flex-column flex-md-row align-items-center justify-content-between mb-4 gap-3">
-        <h2 className="mb-0 text-center text-md-start">
+        <h2 className="mb-0 text-center text-md-start" style={{ fontSize: "1.7rem" }}>
           Latest <span className="badge bg-danger">News</span>
         </h2>
-        <div className="d-flex flex-column flex-md-row align-items-center gap-2">
+        <div className="d-flex flex-column flex-md-row align-items-center gap-2 w-100 w-md-auto">
           <select
-            className="form-select w-auto"
+            className="form-select w-100 w-md-auto"
             value={category}
             onChange={handleCategoryChange}
-            style={{ minWidth: 140 }}
+            style={{ minWidth: 140, maxWidth: 200 }}
           >
             {categories.map(cat => (
               <option key={cat.value} value={cat.value}>{cat.label}</option>
             ))}
           </select>
-          <form className="d-flex" onSubmit={handleSearch}>
+          <form className="d-flex w-100" onSubmit={handleSearch}>
             <input
               type="text"
               className="form-control"
               placeholder="Search news..."
               value={searchInput}
               onChange={e => setSearchInput(e.target.value)}
-              style={{ minWidth: 180 }}
+              style={{ minWidth: 0, flex: 1 }}
             />
-            <button className="btn btn-primary ms-2" type="submit">
-              <i className="bi bi-search"></i> Search
+            <button
+              className="btn btn-primary ms-2 d-flex align-items-center justify-content-center"
+              type="submit"
+              style={{
+                minWidth: 44,
+                paddingLeft: 12,
+                paddingRight: 12,
+                height: 40,
+              }}
+              aria-label="Search"
+            >
+              <i className="bi bi-search"></i>
+              <span className="d-none d-sm-inline ms-1">Search</span>
             </button>
           </form>
         </div>
@@ -167,7 +178,10 @@ const NewsBoard = ({ category: initialCategory }) => {
       <div className="row g-4 justify-content-center">
         {articles && articles.length > 0 ? (
           articles.map((news, index) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" key={index}>
+            <div
+              className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 d-flex justify-content-center"
+              key={index}
+            >
               <NewsItem
                 title={news.title}
                 description={news.description}
