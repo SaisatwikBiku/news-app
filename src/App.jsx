@@ -9,8 +9,9 @@ import Logout from "./Components/Logout";
 
 function Navbar({ isLoggedIn }) {
   const location = useLocation();
+  // Get username from localStorage if logged in
+  const username = isLoggedIn ? localStorage.getItem("username") : null;
 
-  
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div className="container-fluid">
@@ -29,6 +30,11 @@ function Navbar({ isLoggedIn }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
+          {isLoggedIn && username && (
+            <span className="navbar-text ms-lg-3 mt-2 mt-lg-0 text-light fw-semibold">
+              👋 Hello, {username}!
+            </span>
+              )}
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link
@@ -79,6 +85,7 @@ function Navbar({ isLoggedIn }) {
               </li>
             )}
           </ul>
+          
         </div>
       </div>
     </nav>
