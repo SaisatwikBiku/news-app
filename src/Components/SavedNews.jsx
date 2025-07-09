@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 
 const SavedNewsItem = ({ news, onRemove }) => (
-  <div className="card shadow-sm border-0 bg-grey mb-4"
+  <div
+    className="card shadow-sm border-0 bg-white mb-4"
     style={{
       width: "100%",
       maxWidth: 340,
@@ -31,32 +32,47 @@ const SavedNewsItem = ({ news, onRemove }) => (
         }}
       />
     </div>
-    <div className="card-body d-flex flex-column justify-content-between" style={{ minHeight: 200 }}>
-      <h5 className="card-title mb-2" style={{ fontSize: "1.08rem", fontWeight: 600 }}>
+    <div className="card-body d-flex flex-column justify-content-between" style={{ minHeight: 200, padding: "1rem" }}>
+      <h5
+        className="card-title mb-2"
+        style={{
+          fontSize: "1.08rem",
+          fontWeight: 600,
+          wordBreak: "break-word",
+          lineHeight: "1.25",
+        }}
+      >
         {news.title?.length > 70 ? news.title.slice(0, 67) + "..." : news.title}
       </h5>
-      <p className="card-text text-muted mb-3" style={{ fontSize: "0.97rem" }}>
+      <p
+        className="card-text text-muted mb-3"
+        style={{
+          fontSize: "0.97rem",
+          wordBreak: "break-word",
+          lineHeight: "1.35",
+        }}
+      >
         {news.description
           ? news.description.length > 100
             ? news.description.slice(0, 97) + "..."
             : news.description
           : "Stay updated with the latest developments, key insights, and top stories from around the world."}
       </p>
-      <div className="d-flex justify-content-between align-items-center mt-auto gap-2">
+      <div className="d-flex flex-column flex-sm-row justify-content-between align-items-stretch gap-2 mt-auto">
         <a
           href={news.url}
-          className="btn btn-sm btn-primary px-3"
+          className="btn btn-sm btn-primary px-3 flex-fill"
           target="_blank"
           rel="noopener noreferrer"
-          style={{ fontWeight: 500 }}
+          style={{ fontWeight: 500, minWidth: 0 }}
         >
           <i className="bi bi-box-arrow-up-right me-1"></i>Read More
         </a>
         <button
-          className="btn btn-sm btn-outline-danger px-3"
+          className="btn btn-sm btn-outline-danger px-3 flex-fill"
           onClick={() => onRemove(news.url)}
           title="Remove from saved"
-          style={{ fontWeight: 500 }}
+          style={{ fontWeight: 500, minWidth: 0 }}
         >
           <i className="bi bi-trash me-1"></i>Remove
         </button>
@@ -160,7 +176,10 @@ const SavedNews = () => {
       ) : (
         <div className="row g-4 justify-content-center">
           {saved.map((news, index) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex" key={index}>
+            <div
+              className="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-3 d-flex justify-content-center"
+              key={index}
+            >
               <SavedNewsItem news={news} onRemove={handleRemove} />
             </div>
           ))}

@@ -28,6 +28,7 @@ export default function Login() {
 
       if (res.ok) {
         localStorage.setItem("token", data.token);
+        localStorage.setItem("username", username);
         navigate("/");
         window.location.reload();
       } else {
