@@ -150,7 +150,11 @@ const Profile = () => {
                     <input
                       type="text"
                       className="form-control"
-                      value={userInfo.dateOfBirth ? new Date(userInfo.dateOfBirth).toLocaleDateString() : "Not provided"}
+                      value={
+                        userInfo.dateOfBirth
+                          ? new Date(userInfo.dateOfBirth).toISOString().slice(0, 10)
+                          : "Not provided"
+                      }
                       readOnly
                     />
                   </div>
