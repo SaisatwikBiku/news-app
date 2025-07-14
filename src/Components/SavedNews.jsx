@@ -113,12 +113,24 @@ const SavedNews = () => {
           },
         });
 
-        const data = await res.json();
-        const normalized = data.map(item => ({
-          ...item,
-          image: item.urlToImage,
-        }));
-        setSaved(normalized);
+        if (res.status === 403) {
+          // Token is invalid/expired, clear it and redirect to login
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          window.location.href = "/login";
+          return;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          const normalized = data.map(item => ({
+            ...item,
+            image: item.urlToImage,
+          }));
+          setSaved(normalized);
+        } else {
+          setError("Failed to fetch saved news.");
+        }
       } catch (err) {
         setError("Failed to fetch saved news.");
         console.error("Failed to fetch saved news", err);

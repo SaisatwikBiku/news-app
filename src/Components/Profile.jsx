@@ -5,6 +5,7 @@ const Profile = () => {
   const [userInfo, setUserInfo] = useState({
     username: "",
     email: "",
+    dateOfBirth: "",
     joinDate: ""
   });
   const [passwordData, setPasswordData] = useState({
@@ -35,6 +36,14 @@ const Profile = () => {
           "Authorization": `Bearer ${token}`
         }
       });
+
+      if (response.status === 403) {
+        // Token is invalid/expired, clear it and redirect to login
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        navigate("/login");
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();
@@ -133,6 +142,15 @@ const Profile = () => {
                       type="email"
                       className="form-control"
                       value={userInfo.email || "Not provided"}
+                      readOnly
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Date of Birth</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={userInfo.dateOfBirth ? new Date(userInfo.dateOfBirth).toLocaleDateString() : "Not provided"}
                       readOnly
                     />
                   </div>

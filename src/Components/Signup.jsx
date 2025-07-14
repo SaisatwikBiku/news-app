@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 export default function Signup() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -22,6 +24,26 @@ export default function Signup() {
       setMessage("Password must be at least 6 characters.");
       return false;
     }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMessage("Please enter a valid email address.");
+      return false;
+    }
+    if (!dateOfBirth) {
+      setMessage("Please enter your date of birth.");
+      return false;
+    }
+    // Check if user is at least 13 years old
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    if (age < 13) {
+      setMessage("You must be at least 13 years old to sign up.");
+      return false;
+    }
     setMessage("");
     return true;
   };
@@ -36,7 +58,7 @@ export default function Signup() {
       const res = await fetch("https://news-app-backend-sfkz.onrender.com/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, email, dateOfBirth }),
       });
       const data = await res.json();
 
@@ -70,6 +92,32 @@ export default function Signup() {
               required
               autoFocus
             />
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="signup-email">Email</label>
+            <input
+              id="signup-email"
+              type="email"
+              placeholder="Enter email address"
+              className="form-control"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label" htmlFor="signup-dob">Date of Birth</label>
+            <input
+              id="signup-dob"
+              type="date"
+              className="form-control"
+              value={dateOfBirth}
+              onChange={e => setDateOfBirth(e.target.value)}
+              required
+            />
+            <div className="form-text">
+              You must be at least 13 years old.
+            </div>
           </div>
           <div className="mb-3">
             <label className="form-label" htmlFor="signup-password">Password</label>

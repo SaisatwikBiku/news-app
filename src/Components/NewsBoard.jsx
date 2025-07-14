@@ -42,8 +42,18 @@ const NewsBoard = ({ category: initialCategory }) => {
           },
         });
 
-        const data = await res.json();
-        setSavedUrls(data.map(item => item.url));
+        if (res.status === 403) {
+          // Token is invalid/expired, clear it and redirect to login
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          window.location.href = "/login";
+          return;
+        }
+
+        if (res.ok) {
+          const data = await res.json();
+          setSavedUrls(data.map(item => item.url));
+        }
       } catch (err) {
         console.error("Failed to fetch saved news", err);
       }
