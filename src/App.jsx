@@ -7,17 +7,22 @@ import Signup from "./Components/Signup";
 import ProtectedRoute from "./Components/ProtectedRoute";   
 import Logout from "./Components/Logout";
 import Profile from "./Components/Profile";
+import logo from "./assets/news app logo.png";
+import Footer from "./Components/Footer"; // <-- Add this import
 
 function Navbar({ isLoggedIn }) {
   const location = useLocation();
-  // Get username from localStorage if logged in
   const username = isLoggedIn ? localStorage.getItem("username") : null;
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" to="/">
-          <span className="badge bg-light text-dark fs-4 px-3 py-2 shadow-sm">NewsApp</span>
+          <img
+            src={logo}
+            alt="News App Logo"
+            style={{ height: 100, width: 100, objectFit: "contain", marginRight: 8 }}
+          />
         </Link>
         <button
           className="navbar-toggler"
@@ -35,7 +40,7 @@ function Navbar({ isLoggedIn }) {
             <span className="navbar-text ms-lg-3 mt-2 mt-lg-0 text-light fw-semibold">
               👋 Hello, {username}!
             </span>
-              )}
+          )}
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link
@@ -96,7 +101,6 @@ function Navbar({ isLoggedIn }) {
               </li>
             )}
           </ul>
-          
         </div>
       </div>
     </nav>
@@ -107,27 +111,32 @@ function App() {
   const isLoggedIn = !!localStorage.getItem("token");
   return (
     <Router>
-      <Navbar isLoggedIn={isLoggedIn} />
-      <Routes>
-        <Route path="/" element={
-          <ProtectedRoute>
-            <NewsBoard category="general" />
-          </ProtectedRoute>
-        } />
-        <Route path="/saved" element={
-          <ProtectedRoute>
-            <SavedNews />
-          </ProtectedRoute>
-        } />
-        <Route path="/profile" element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        } />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/logout" element={<Logout />} />
-      </Routes>
+      <div className="d-flex flex-column min-vh-100">
+        <Navbar isLoggedIn={isLoggedIn} />
+        <div className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={
+              <ProtectedRoute>
+                <NewsBoard category="general" />
+              </ProtectedRoute>
+            } />
+            <Route path="/saved" element={
+              <ProtectedRoute>
+                <SavedNews />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
+        </div>
+        <Footer /> 
+      </div>
     </Router>
   );
 }
