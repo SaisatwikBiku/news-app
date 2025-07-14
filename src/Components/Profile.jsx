@@ -51,7 +51,7 @@ const Profile = () => {
       } else {
         setError("Failed to fetch user information");
       }
-    } catch (err) {
+    } catch {
       setError("Error fetching user information");
     }
   };
@@ -100,7 +100,7 @@ const Profile = () => {
       } else {
         setError(data.error || "Failed to change password");
       }
-    } catch (err) {
+    } catch {
       setError("Error changing password");
     } finally {
       setLoading(false);
