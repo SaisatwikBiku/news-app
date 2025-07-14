@@ -10,6 +10,7 @@ A full-stack news application built with **React**, **Express**, and **MongoDB**
 
 - Browse top headlines by category (Technology, Business, Health, Sports, Entertainment)
 - **User authentication (JWT-based login/signup)**
+- **User profile management with password change functionality**
 - **Save and manage news articles per user**
 - Search for news by keyword
 - Responsive design using Bootstrap
@@ -66,7 +67,11 @@ A full-stack news application built with **React**, **Express**, and **MongoDB**
 
 4. Start the server:
     ```bash
-    node server.js
+    npm start
+    ```
+    or
+    ```bash
+    npm run dev
     ```
 
 ---
@@ -87,6 +92,16 @@ A full-stack news application built with **React**, **Express**, and **MongoDB**
     ```bash
     npm run dev
     ```
+
+---
+
+## Deployment
+
+The application is configured to use the deployed backend on Render:
+- **Backend URL**: https://news-app-backend-sfkz.onrender.com
+- **Frontend**: Can be deployed on Vercel, Netlify, or similar platforms
+
+For local development, you can change the API endpoints back to `http://localhost:8000` in the frontend components.
 
 ---
 

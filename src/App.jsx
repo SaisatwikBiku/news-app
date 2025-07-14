@@ -6,6 +6,7 @@ import Login from "./Components/Login";
 import Signup from "./Components/Signup"; 
 import ProtectedRoute from "./Components/ProtectedRoute";   
 import Logout from "./Components/Logout";
+import Profile from "./Components/Profile";
 
 function Navbar({ isLoggedIn }) {
   const location = useLocation();
@@ -51,6 +52,16 @@ function Navbar({ isLoggedIn }) {
                   to="/saved"
                 >
                   Saved News
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="nav-item">
+                <Link
+                  className={`nav-link${location.pathname === "/profile" ? " active fw-bold text-primary" : ""}`}
+                  to="/profile"
+                >
+                  Profile
                 </Link>
               </li>
             )}
@@ -106,6 +117,11 @@ function App() {
         <Route path="/saved" element={
           <ProtectedRoute>
             <SavedNews />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         } />
         <Route path="/login" element={<Login />} />
