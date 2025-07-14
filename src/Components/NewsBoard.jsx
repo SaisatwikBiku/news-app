@@ -216,14 +216,6 @@ const NewsBoard = ({ category: initialCategory }) => {
           <i className="bi bi-bookmark-heart-fill me-2"></i>View Saved News
         </button>
       </div>
-      <div className="text-center mt-4">
-        <small className="text-muted">Powered by <a href="https://gnews.io/" target="_blank" rel="noopener noreferrer">GNews API</a></small>
-      </div>
-      <div className="text-center mt-2">
-        <small className="text-muted">
-          Developed by <a href="https://github.com/SaisatwikBiku" target="_blank" rel="noopener noreferrer">Sai Satwik Bikumandla</a>
-        </small>
-      </div>
     </div>
   );
 };
