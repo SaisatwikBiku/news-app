@@ -7,8 +7,8 @@ import Signup from "./Components/Signup";
 import ProtectedRoute from "./Components/ProtectedRoute";   
 import Logout from "./Components/Logout";
 import Profile from "./Components/Profile";
-import logo from "./assets/news app logo.png";
-import Footer from "./Components/Footer"; // <-- Add this import
+import logo from "./assets/news_app_logo.png";
+import Footer from "./Components/Footer"; 
 
 function Navbar({ isLoggedIn }) {
   const location = useLocation();
