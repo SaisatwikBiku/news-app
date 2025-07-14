@@ -8,13 +8,28 @@ const router = express.Router();
 
 // Register
 router.post("/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email, dateOfBirth } = req.body;
   try {
+    // Validate required fields
+    if (!username || !password || !email || !dateOfBirth) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) return res.status(400).json({ error: "User already exists" });
 
+    // Check if email already exists
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) return res.status(400).json({ error: "Email already exists" });
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ username, password: hashedPassword });
+    await User.create({ 
+      username, 
+      password: hashedPassword, 
+      email, 
+      dateOfBirth: new Date(dateOfBirth)
+    });
 
     res.json({ message: "User registered successfully" });
   } catch (err) {
@@ -48,6 +63,7 @@ router.get("/profile", verifyToken, async (req, res) => {
     res.json({
       username: user.username,
       email: user.email,
+      dateOfBirth: user.dateOfBirth,
       joinDate: user.joinDate || user.createdAt,
       createdAt: user.createdAt
     });
