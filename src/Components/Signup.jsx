@@ -68,7 +68,14 @@ export default function Signup() {
         navigate("/");
         window.location.reload();
       } else {
-        setMessage(data.error || "Signup failed.");
+        // Show specific error for duplicate username
+        if (data.error === "User already exists") {
+          setMessage("Username already exists. Please choose a different username.");
+        } else if (data.error === "Email already exists") {
+          setMessage("Email already exists. Please use a different email address.");
+        } else {
+          setMessage(data.error || "Signup failed.");
+        }
       }
     } catch {
       setMessage("Signup failed. Try again.");
