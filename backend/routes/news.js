@@ -1,5 +1,7 @@
 import express from "express";
 import SavedNews from "../models/SavedNews.js";
+import SharedNews from "../models/SharedNews.js";
+import User from "../models/User.js";
 import { verifyToken } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -36,6 +38,34 @@ router.post("/remove", verifyToken, async (req, res) => {
     res.json({ message: "Removed" });
   } catch {
     res.status(500).json({ error: "Failed to remove" });
+  }
+});
+
+router.post("/share", verifyToken, async (req, res) => {
+  const { receiverUsername, ...newsData } = req.body;
+  try {
+    const receiver = await User.findOne({ username: receiverUsername });
+    if (!receiver) return res.status(404).json({ error: "Receiver not found" });
+
+    const shared = await SharedNews.create({
+      senderId: req.userId,
+      receiverId: receiver._id,
+      ...newsData
+    });
+    res.json(shared);
+  } catch {
+    res.status(500).json({ error: "Failed to share news" });
+  }
+});
+
+router.get("/inbox", verifyToken, async (req, res) => {
+  try {
+    const inbox = await SharedNews.find({ receiverId: req.userId })
+      .sort({ sharedAt: -1 })
+      .populate("senderId", "username"); // <-- This line populates senderId with username
+    res.json(inbox);
+  } catch {
+    res.status(500).json({ error: "Failed to fetch inbox" });
   }
 });
 

@@ -101,4 +101,13 @@ router.post("/change-password", verifyToken, async (req, res) => {
   }
 });
 
+router.get("/usernames", async (req, res) => {
+  try {
+    const users = await User.find({}, "username -_id");
+    res.json(users.map(u => u.username));
+  } catch {
+    res.status(500).json({ error: "Failed to fetch usernames" });
+  }
+});
+
 export default router;
