@@ -7,6 +7,7 @@ import Signup from "./Components/Signup";
 import ProtectedRoute from "./Components/ProtectedRoute";   
 import Logout from "./Components/Logout";
 import Profile from "./Components/Profile";
+import Inbox from "./Components/Inbox";
 import logo from "./assets/news_app_logo.png";
 import Footer from "./Components/Footer"; 
 
@@ -93,6 +94,16 @@ function Navbar({ isLoggedIn }) {
             {isLoggedIn && (
               <li className="nav-item">
                 <Link
+                  className={`nav-link${location.pathname === "/inbox" ? " active fw-bold text-primary" : ""}`}
+                  to="/inbox"
+                >
+                  Inbox
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li className="nav-item">
+                <Link
                   className={`nav-link${location.pathname === "/logout" ? " active fw-bold text-primary" : ""}`}
                   to="/logout"
                 >
@@ -133,6 +144,11 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/inbox" element={
+              <ProtectedRoute>
+                <Inbox />
+              </ProtectedRoute>
+            } />
           </Routes>
         </div>
         <Footer /> 
