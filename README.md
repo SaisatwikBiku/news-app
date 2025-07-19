@@ -2,7 +2,8 @@
 
 A full-stack news application built with **React**, **Express**, and **MongoDB**, allowing users to browse the latest headlines, search for articles, and **save news items to their personal account**.
 
-![News App Screenshot](<Screenshot 2025-06-29 at 6.36.53 PM.png>)
+<img width="1438" height="859" alt="Screenshot 2025-07-19 at 3 19 15 PM" src="https://github.com/user-attachments/assets/d423aa56-44d5-4d54-8135-f557e2d542b9" />
+
 
 ---
 
