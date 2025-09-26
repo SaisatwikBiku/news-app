@@ -63,24 +63,44 @@ const NewsBoard = ({ category: initialCategory }) => {
   }, []);
 
   useEffect(() => {
-    let url = `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&country=us&max=10&apikey=${import.meta.env.VITE_API_KEY}`;
-    if (search) {
-      url = `https://gnews.io/api/v4/search?q=${search}&lang=en&country=us&max=10&category=${category}&apikey=${import.meta.env.VITE_API_KEY}`;
-    }
-    fetch(url)
-      .then(response => {
+    const fetchNews = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        let url = `https://news-app-backend-sfkz.onrender.com/api/news/fetch?category=${category}&max=10`;
+        if (search) {
+          url += `&search=${encodeURIComponent(search)}`;
+        }
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 403) {
+          // Token is invalid/expired, clear it and redirect to login
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          window.location.href = "/login";
+          return;
+        }
+
         if (response.status === 429) {
           throw new Error("Rate limit exceeded. Please try again later.");
         }
+
         if (response.status === 401) {
           throw new Error("Invalid API key. Please check your configuration.");
         }
+
         if (!response.ok) {
           throw new Error(`API error: ${response.status}`);
         }
-        return response.json();
-      })
-      .then(data => {
+
+        const data = await response.json();
+        
         if (!data.articles) {
           setError(data.message || "Failed to fetch news. Try reloading the page.");
           setArticles([]);
@@ -88,12 +108,14 @@ const NewsBoard = ({ category: initialCategory }) => {
           setArticles(data.articles || []);
           setError(null);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("News fetch error:", error);
         setError(error.message || "Network error");
         setArticles([]);
-      });
+      }
+    };
+
+    fetchNews();
   }, [category, search]);
 
   const handleSearch = (e) => {
