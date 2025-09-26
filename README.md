@@ -99,8 +99,8 @@ A full-stack news application built with **React**, **Express**, and **MongoDB**
 ## Deployment
 
 The application is configured to use the deployed backend on Render:
-- **Backend URL**: https://news-app-backend-sfkz.onrender.com
-- **Frontend**: Can be deployed on Vercel, Netlify, or similar platforms
+- **Backend**: Render
+- **Frontend**: Vercel
 
 For local development, you can change the API endpoints back to `http://localhost:8000` in the frontend components.
 
@@ -108,6 +108,7 @@ For local development, you can change the API endpoints back to `http://localhos
 
 ## Coming Soon / TODO
 
+- Security Enhancemenmts
 - UI Improvements
 - Mobile Optimisations
 - Toast notifications for Save/Remove
