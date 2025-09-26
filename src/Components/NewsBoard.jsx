@@ -68,7 +68,18 @@ const NewsBoard = ({ category: initialCategory }) => {
       url = `https://gnews.io/api/v4/search?q=${search}&lang=en&country=us&max=10&category=${category}&apikey=${import.meta.env.VITE_API_KEY}`;
     }
     fetch(url)
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 429) {
+          throw new Error("Rate limit exceeded. Please try again later.");
+        }
+        if (response.status === 401) {
+          throw new Error("Invalid API key. Please check your configuration.");
+        }
+        if (!response.ok) {
+          throw new Error(`API error: ${response.status}`);
+        }
+        return response.json();
+      })
       .then(data => {
         if (!data.articles) {
           setError(data.message || "Failed to fetch news. Try reloading the page.");
@@ -78,8 +89,9 @@ const NewsBoard = ({ category: initialCategory }) => {
           setError(null);
         }
       })
-      .catch(() => {
-        setError("Network error");
+      .catch((error) => {
+        console.error("News fetch error:", error);
+        setError(error.message || "Network error");
         setArticles([]);
       });
   }, [category, search]);
